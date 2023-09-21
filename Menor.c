@@ -19,12 +19,14 @@ TAB* menor(TAB * a){
     TAB* percorre = (TAB*) malloc(sizeof(TAB));
     if(a->esq !=NULL){
         menor(a->esq);
-    }else{
+    }
+    else{
         percorre->info = a->info;
         percorre->dir = a->dir;
         percorre->esq = a->esq;
         return percorre;
     }
+    
 }
 
 void imprime(TAB *nodo, int tab){
@@ -44,7 +46,7 @@ int main(void){
     raiz = criaNo(5);
     raiz->esq = criaNo(4);
     raiz->dir = criaNo(9);
-    raiz->esq->esq = criaNo(8);
+    raiz->esq->esq = criaNo(1);
     TAB* guarda = menor(raiz);
     int resultado = guarda->info;
     printf("%d \n", resultado);
