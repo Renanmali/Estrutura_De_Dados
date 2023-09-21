@@ -56,7 +56,7 @@ TNoA* exclui(TNoA *raiz, int chave) {
                 }
 
             }
-        }else{
+        }else{ 
             novo = raiz;
             if(raiz->chave > chave){
                 raiz->esq = exclui(raiz->esq, chave);
