@@ -7,7 +7,7 @@ typedef struct noA{
     struct noA* dir;
 }TNoA;
 
-TNoA *criaNo(char ch){
+TNoA *criaNo(int ch){
     TNoA* novo;
     novo = (TNoA *) malloc(sizeof(TNoA));
     novo->info = ch;
@@ -38,15 +38,33 @@ TNoA* copia(TNoA* original){
     return copia1;
 }
 
+TNoA* espelho(TNoA *raiz) {
+    //TODO: Implementar essa funcão
+    TNoA* original = raiz;
+    TNoA* espelhar = NULL;
+    if(original == NULL) {return original;}
+    
+    espelhar = original;
+    TNoA* aux = original->esq;
+    original->esq = original->dir;
+    original->dir = aux;
+    espelho(original->esq);
+    espelho(original->dir);
+    return espelhar;
+    
+}
+
 
 int main(void){
     TNoA *raiz;
-    raiz = criaNo('A');
-    raiz->esq = criaNo('B');
-    raiz->dir = criaNo('C');
-    raiz->esq->esq = criaNo('D');
-    TNoA* guarda = copia(raiz);
-    guarda->esq->esq->dir = criaNo('E');
+    raiz = criaNo('10');
+    raiz->esq = criaNo('15');
+    raiz->dir = criaNo(20);
+    raiz->esq->esq = criaNo(40);
+    raiz->esq->dir = criaNo(3);
+    TNoA* guarda = espelho(raiz);
+    // guarda->esq->esq->dir = criaNo('E');
+    printf("\n");
     imprime(guarda, 0);
     
 }

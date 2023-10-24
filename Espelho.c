@@ -9,16 +9,17 @@ typedef struct noA {
     struct noA *dir;
 } TNoA;
 
-void espelho(TNoA *raiz) {
+TNoA* espelho(TNoA *raiz) {
     //TODO: Implementar essa funcão
-    if(!raiz) return;
-
+    if(raiz == NULL) {return raiz;}
+    else{
     TNoA* aux = raiz->esq;
     raiz->esq = raiz->dir;
     raiz->dir = aux;
     espelho(raiz->dir);
     espelho(raiz->esq);
-
+    return aux;
+    }
 }
 
 void imprime(TNoA *nodo, int tab) {
