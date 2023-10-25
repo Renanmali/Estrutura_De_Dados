@@ -3,12 +3,12 @@
 #include "Corpo.c"
 
 int na(TGrafo *g){
-    int *arestas = 0;
+    int arestas = 0;
     if(g == NULL){
         return 0;
     }else{
         while(g->prox != NULL){
-            arestas += 1;
+            arestas ++;
             na(g->prox);
         }
         return *arestas;

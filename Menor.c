@@ -16,15 +16,20 @@ TAB *criaNo(int info){
 }
 
 TAB* menor(TAB * a){
-    TAB* percorre = (TAB*) malloc(sizeof(TAB));
-    if(a->esq !=NULL){
-        menor(a->esq);
-    }
-    else{
-        percorre = a;
-        return percorre;
+    if(a == NULL){return a;}
+    TAB* aux = a;
+
+    TAB* auxDir = menor(a->dir);
+    if(auxDir != NULL && auxDir->info < aux->info){
+        aux = auxDir;
     }
 
+    TAB* auxEsq = menor(a->esq);
+    if(auxEsq != NULL && auxEsq->info < aux->info){
+        aux = auxEsq;
+    }
+    
+    return aux;
 }
 
 void imprime(TAB *nodo, int tab){
@@ -43,8 +48,8 @@ int main(void){
     TAB *raiz;
     raiz = criaNo(5);
     raiz->esq = criaNo(4);
-    raiz->dir = criaNo(9);
-    raiz->esq->esq = criaNo(1);
+    raiz->dir = criaNo(2);
+    raiz->esq->esq = criaNo(12);
     raiz->esq->esq->dir = criaNo(3);
     TAB* guarda = menor(raiz);
     int resultado = guarda->info;

@@ -1,88 +1,111 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Definição da estrutura da árvore binária
-typedef struct ab {
-    int info;
-    struct ab *esq, *dir;
-} TAB;
+typedef struct No {
+    int valor;
+    struct No *esquerda;
+    struct No *direita;
+} NoArvore;
 
-// Função para criar um novo nó da árvore
-TAB* criarNo(int valor) {
-    TAB* novoNo = (TAB*)malloc(sizeof(TAB));
-    novoNo->info = valor;
-    novoNo->esq = NULL;
-    novoNo->dir = NULL;
+typedef struct NoLista {
+    int valor;
+    struct NoLista *prox;
+} NoLista;
+
+NoArvore *criarNo(int valor) {
+    NoArvore *novoNo = (NoArvore *)malloc(sizeof(NoArvore));
+    novoNo->valor = valor;
+    novoNo->esquerda = NULL;
+    novoNo->direita = NULL;
     return novoNo;
 }
 
-TAB* maior(TAB* a){
-    
-    if(a == NULL){return a;}
-   
-    TAB* aux = a;
-
-
-    TAB* auxDir = maior(a->dir);
-    TAB* auxEsq = maior(a->esq);
-    if(auxDir != NULL && auxDir->info > aux->info){
-        aux = auxDir;
-    }
-    if(auxEsq != NULL && auxEsq->info > aux->info){
-        aux = auxEsq;
-    }
-
-
-    return aux;
-
-
+NoLista *inserirLista(NoLista *cabeca, int valor) {
+    NoLista *novoNo = (NoLista *)malloc(sizeof(NoLista));
+    novoNo->valor = valor;
+    novoNo->prox = cabeca;
+    return novoNo;
 }
 
-
-int maior1(TAB* raiz) {
+NoLista *valoresEntreMEN(NoArvore *raiz, int m, int n) {
     if (raiz == NULL) {
-        return -1; // Se a árvore estiver vazia, retorne um valor indicando erro (por exemplo, -1)
+        return NULL;
     }
 
-    int maiorElemento = raiz->info;
+    NoLista *lista = NULL;
 
-    // Verifica o maior valor na subárvore à direita
-    int maiorDireita = maior1(raiz->dir);
-    int maiorEsquerda = maior1(raiz->esq);
-    if (maiorDireita > maiorElemento) {
-        maiorElemento = maiorDireita;
+    if (raiz->valor > m && raiz->valor < n) {
+        lista = inserirLista(lista, raiz->valor);
     }
 
-    // Verifica o maior valor na subárvore à esquerda
-   
-    if (maiorEsquerda > maiorElemento) {
-        maiorElemento = maiorEsquerda;
+    NoLista *esquerda = valoresEntreMEN(raiz->esquerda, m, n);
+    NoLista *direita = valoresEntreMEN(raiz->direita, m, n);
+
+    // Concatenar as listas
+    NoLista *atual = lista;
+    if (atual == NULL) {
+        lista = esquerda;
+    } else {
+        while (atual->prox != NULL) {
+            atual = atual->prox;
+        }
+        atual->prox = esquerda;
     }
 
-    return maiorElemento;
+    // Concatenar a lista da direita
+    atual = lista;
+    if (atual == NULL) {
+        lista = direita;
+    } else {
+        while (atual->prox != NULL) {
+            atual = atual->prox;
+        }
+        atual->prox = direita;
+    }
+
+    return lista;
 }
 
-void imprime(TAB *nodo, int tab){
-    for(int i = 0; i < tab; i++){
-        printf("-");
+void imprimirLista(NoLista *cabeca) {
+    NoLista *atual = cabeca;
+    while (atual != NULL) {
+        printf("%d ", atual->valor);
+        atual = atual->prox;
     }
-    if(nodo != NULL){
-        printf("%d\n", nodo->info);
-        imprime(nodo->esq, tab + 2);
-        printf("\n");
-        imprime(nodo->dir, tab + 2);
-    }else printf("vazio");
+    printf("\n");
 }
 
-
-int main(){
-    TAB* raiz;
-    raiz = criarNo(5);
-    raiz->dir = criarNo(4);
-    raiz->esq = criarNo(6);
-    raiz->esq->esq = criarNo(40);
-    raiz->esq->dir = criarNo(3);
-    TAB* retorno = maior(raiz);
-    
-    imprime(retorno,0);
+void liberarLista(NoLista *cabeca) {
+    NoLista *atual = cabeca;
+    while (atual != NULL) {
+        NoLista *prox = atual->prox;
+        free(atual);
+        atual = prox;
+    }
 }
+
+int main() {
+    // Construa uma árvore binária simples
+    NoArvore *raiz = criarNo(5);
+    raiz->esquerda = criarNo(3);
+    raiz->direita = criarNo(8);
+    raiz->esquerda->esquerda = criarNo(2);
+    raiz->esquerda->direita = criarNo(4);
+    raiz->direita->esquerda = criarNo(7);
+    raiz->direita->direita = criarNo(10);
+
+    int m = 3; // Valor mínimo
+    int n = 7; // Valor máximo
+
+    // Obtenha uma lista de valores entre m e n na árvore
+    NoLista *lista = valoresEntreMEN(raiz, m, n);
+
+    // Imprima os valores da lista
+    printf("Valores entre %d e %d na árvore: ", m, n);
+    imprimirLista(lista);
+
+    // Lembre-se de liberar a memória alocada para a lista e a árvore.
+
+    return 0;
+}
+

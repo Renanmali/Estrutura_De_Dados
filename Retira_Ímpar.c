@@ -20,7 +20,7 @@ void imprime(TABB *nodo, int tab){
         printf("-");
     }
     if(nodo != NULL){
-        printf("%c\n", nodo->info);
+        printf("%d\n", nodo->info);
         imprime(nodo->esq, tab + 2);
         printf("\n");
         imprime(nodo->dir, tab + 2);
@@ -29,18 +29,44 @@ void imprime(TABB *nodo, int tab){
 
 TABB* retira_impares(TABB* a){
     TABB* novo = (TABB*) malloc(sizeof(TABB));
-    novo = a;
-    if(novo == NULL){
-        return novo;
-    }else{
-        if(novo->info%2 == 1){
-            novo = NULL;
-        }else{
-            retira_impares(novo->esq);
-            retira_impares(novo->dir);
-        }
+    TABB* percorre = a->esq;
+    TABB* aux;
+    if(a == NULL) {return a;}
+    else{
+        if(a->info%2 == 1){
+            if(a->esq == NULL && a->dir == NULL){
+                novo = NULL;
+            }
+            else{
+                if(a->esq != NULL && a->dir != NULL){  // Caso o nó possua dois filhos // 
+                    
+                    // Usei como referencial o que foi visto em aula e retornar o maior valor da subárvore a esquerda // 
+                    while(percorre->dir != NULL){
+                        percorre = percorre->dir;
+                    }
+                    aux = a;
+                    a->info = percorre->info;
+                    percorre->info = aux->info;
+                    a->esq = retira_impares(a->esq);
+                    return a;
+                }else{                                      // Caso o nó possua um único filho //
+                    if(a->esq != NULL){
+                        aux = a->esq;
+                    }else
+                        aux = a->dir;
+                    free(a);
+                    return aux;
+                }
 
+            }
+        }
+        else{
+            novo = a;
+            retira_impares(a->esq);
+            retira_impares(a->dir);
+        }
     }
+
     return novo;
 }
 
