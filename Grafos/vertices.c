@@ -95,6 +95,28 @@ int nv(TGrafo* g){
 
 }
 
+int quant(TGrafo* g, int k){
+    if(g == NULL){
+        return 0;
+    }
+    TGrafo* vertice = g;
+    while(vertice != NULL){
+        int cont = 0;
+        TVizinho* vizinho = vertice->primeiro_vizinho;
+        while(vizinho != NULL){
+            cont ++ ; 
+            vizinho = vizinho->prox;
+        }
+        if(cont >= k){
+            vertice = vertice->prox;
+        }
+        else{
+            return 0;
+        }
+    }
+    return 1;
+}
+
 int main(void){
     TGrafo* inicio = NULL;
     inicio = inserirVertice(inicio, 1);
@@ -108,12 +130,14 @@ int main(void){
 
 
     inicio = inserirAresta(inicio, 1, 2);
-    inicio = inserirAresta(inicio, 1, 3);
-    inicio = inserirAresta(inicio, 1, 4);
-    inicio = inserirAresta(inicio, 1, 5);
-    inicio = inserirAresta(inicio, 1, 6);
-    inicio = inserirAresta(inicio, 1, 7);
+    inicio = inserirAresta(inicio, 2, 3);
+    inicio = inserirAresta(inicio, 3, 4);
+    inicio = inserirAresta(inicio, 4, 5);
+    inicio = inserirAresta(inicio, 5, 6);
+    inicio = inserirAresta(inicio, 6, 7);
+    inicio = inserirAresta(inicio, 7, 8);
+    inicio = inserirAresta(inicio, 8, 1);
     
-    int i = na(inicio);
+    int i = quant(inicio, 2);
     printf("%d", i);
 }
